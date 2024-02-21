@@ -24,7 +24,30 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api/:date?", (req, res) => {
+  // Time convert function
+  const uploadTime = (date) => {
+    let unix = Number(date);
+    let utc = date.toUTCString();
+    res.json({"unix": unix, "utc": utc})
+  }
 
+  // Test if input is a valid UTC or Unix key
+  let date;
+  let dateUTC = new Date(req.params.date);
+  let dateUnix = new Date();
+
+  dateUnix.setTime(req.params.date);
+  
+  if (dateUTC.toString() !== "Invalid Date") {
+    uploadTime(dateUTC);
+  } else if (dateUnix.toString() !== "Invalid Date") {
+    uploadTime(dateUnix);
+  } else {
+    res.json({"error": "Invalid Date"});
+  }
+
+})
 
 // Listen on port set in environment variable or default to 3000
 var listener = app.listen(process.env.PORT || 3000, function () {
