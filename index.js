@@ -31,18 +31,20 @@ app.get("/api/:date?", (req, res) => {
     let utc = date.toUTCString();
     res.json({"unix": unix, "utc": utc})
   }
-
+  console.log(req.params.date);
   // Test if input is a valid UTC or Unix key
-  let date;
   let dateUTC = new Date(req.params.date);
   let dateUnix = new Date();
 
   dateUnix.setTime(req.params.date);
-  
+
   if (dateUTC.toString() !== "Invalid Date") {
     uploadTime(dateUTC);
   } else if (dateUnix.toString() !== "Invalid Date") {
     uploadTime(dateUnix);
+  } else if (req.params.date === "" || req.params.date === undefined) {
+    let date = new Date();
+    uploadTime(date);
   } else {
     res.json({"error": "Invalid Date"});
   }
